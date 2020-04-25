@@ -1,13 +1,14 @@
 const goodState = "good posture";
 const badState = "BAD POSTURE!!!";
-const BAD_DELTA = 15;
+const BAD_DELTA_EYES = 15, BAD_DELTA_SHOULDERS=30;
 
 let video;
 let poseNet;
 let poses = [];
 var isStarted=false;
 
-var rightEye, leftEye, defaultRightEyePosition = [];
+var rightEye, leftEye, defaultRightEyePosition = [], 
+    rightShoulder, leftShoulder;
 
 function setup() {
     const canvas = createCanvas(640, 480);
@@ -71,17 +72,26 @@ function drawBodyParts() {
             let keypoint = pose.keypoints[j];
             rightEye = pose.keypoints[2].position;
             leftEye = pose.keypoints[1].position;
+            rightShoulder = pose.keypoints[6].position;
+            leftShoulder = pose.keypoints[5].position;
 
             //Position of eyes when a human opens experiment page. Start position.
             while (defaultRightEyePosition.length < 1) {
                 defaultRightEyePosition.push(rightEye.y);
             }
 
-            if (Math.abs(rightEye.y - defaultRightEyePosition[0]) < BAD_DELTA && Math.abs(rightEye.y - leftEye.y) < BAD_DELTA) {
+            if (Math.abs(rightEye.y - defaultRightEyePosition[0]) < BAD_DELTA_EYES && Math.abs(rightEye.y - leftEye.y) < BAD_DELTA_EYES &&
+                Math.abs(rightShoulder.y - leftShoulder.y) < BAD_DELTA_SHOULDERS) {
                 document.getElementById("state").innerHTML = goodState;
             } 
             else {
                 document.getElementById("state").innerHTML = badState;
+                if (Math.abs(rightEye.y - leftEye.y) >= BAD_DELTA_EYES || Math.abs(rightEye.y - defaultRightEyePosition[0]) >=BAD_DELTA_EYES) {
+                    document.getElementById("state").innerHTML += " EYES!!!";
+                }
+                if (Math.abs(rightShoulder.y - leftShoulder.y) >= BAD_DELTA_SHOULDERS) {
+                    document.getElementById("state").innerHTML += " SHOULDERS!!!";
+                }
             }
 
             // Only draw a body part is the pose probability is bigger than 0.2
@@ -90,6 +100,8 @@ function drawBodyParts() {
                 noStroke();
                 ellipse(rightEye.x, rightEye.y, 10, 10);
                 ellipse(leftEye.x, leftEye.y, 10, 10);
+                ellipse(rightShoulder.x, rightShoulder.y, 30, 30);
+                ellipse(leftShoulder.x, leftShoulder.y, 30, 30);
             }
         }
     }
