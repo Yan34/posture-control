@@ -77,7 +77,7 @@ function drawBodyParts() {
                 defaultRightEyePosition.push(rightEye.y);
             }
 
-            if (Math.abs(rightEye.y - defaultRightEyePosition[0]) < BAD_DELTA) {
+            if (Math.abs(rightEye.y - defaultRightEyePosition[0]) < BAD_DELTA && Math.abs(rightEye.y - leftEye.y) < BAD_DELTA) {
                 document.getElementById("state").innerHTML = goodState;
             } 
             else {
