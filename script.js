@@ -82,9 +82,13 @@ function drawBodyParts() {
 
             if (Math.abs(rightEye.y - defaultRightEyePosition[0]) < BAD_DELTA_EYES && Math.abs(rightEye.y - leftEye.y) < BAD_DELTA_EYES &&
                 Math.abs(rightShoulder.y - leftShoulder.y) < BAD_DELTA_SHOULDERS) {
+                document.getElementById("state").style.color="black";
+                document.getElementById("state").style.fontWeight="";
                 document.getElementById("state").innerHTML = goodState;
             } 
             else {
+                document.getElementById("state").style.color="red";
+                document.getElementById("state").style.fontWeight="bold";
                 document.getElementById("state").innerHTML = badState;
                 if (Math.abs(rightEye.y - leftEye.y) >= BAD_DELTA_EYES || Math.abs(rightEye.y - defaultRightEyePosition[0]) >=BAD_DELTA_EYES) {
                     document.getElementById("state").innerHTML += " ГОЛОВА!!!";
