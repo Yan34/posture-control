@@ -1,5 +1,5 @@
-const goodState = "good posture";
-const badState = "BAD POSTURE!!!";
+const goodState = "Хорошая осанка";
+const badState = "ПЛОХАЯ ОСАНКА!!!";
 const BAD_DELTA_EYES = 15, BAD_DELTA_SHOULDERS=30;
 
 let video;
@@ -87,10 +87,10 @@ function drawBodyParts() {
             else {
                 document.getElementById("state").innerHTML = badState;
                 if (Math.abs(rightEye.y - leftEye.y) >= BAD_DELTA_EYES || Math.abs(rightEye.y - defaultRightEyePosition[0]) >=BAD_DELTA_EYES) {
-                    document.getElementById("state").innerHTML += " EYES!!!";
+                    document.getElementById("state").innerHTML += " ГОЛОВА!!!";
                 }
                 if (Math.abs(rightShoulder.y - leftShoulder.y) >= BAD_DELTA_SHOULDERS) {
-                    document.getElementById("state").innerHTML += " SHOULDERS!!!";
+                    document.getElementById("state").innerHTML += " ПЛЕЧИ!!!";
                 }
             }
 
