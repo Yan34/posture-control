@@ -2,10 +2,19 @@ const goodState = "Хорошая осанка";
 const badState = "ПЛОХАЯ ОСАНКА!!!";
 const BAD_DELTA_EYES = 15, BAD_DELTA_SHOULDERS=30;
 
+let alarm = new Audio('./alarm.mp3');
+alarm.loop="loop";
+alarm.preload="auto";
+let timerAlarm=null;
 let video;
 let poseNet;
 let poses = [];
 var isStarted=false;
+
+function startAlarm () {
+    alarm.play();
+    console.log('alarm started');
+}
 
 var rightEye, leftEye, defaultRightEyePosition = [], 
     rightShoulder, leftShoulder;
@@ -34,7 +43,7 @@ function start() {
     document.getElementById("startButton").onclick = '';
     document.getElementById("startButton").removeEventListener("click", start);
     document.getElementById("startButton").addEventListener("click", stop);
-    console.log('start button clicked, loop isn\'t started');
+    console.log('start button clicked, loop wasn\'t started');
     isStarted = true;
     loop(); //p5.js function
     console.log('loop started');
@@ -44,11 +53,14 @@ function stop() {
     document.getElementById("startButton").innerHTML="Начать";
     document.getElementById("startButton").removeEventListener("click", stop);
     document.getElementById("startButton").addEventListener("click", start);
-    console.log('example button clicked, loop is started');
+    console.log('stop button clicked, loop was started');
     document.getElementById("state").innerHTML = '';
     isStarted = false;
     noLoop(); //p5.js function
     console.log('loop stopped');
+    if(timerAlarm!=null) {clearTimeout(timerAlarm); console.log('alarm paused');}
+    timerAlarm=null;
+    alarm.pause();
     rightEye=null; leftEye=null; defaultRightEyePosition = [];
 }
 
@@ -86,11 +98,15 @@ function drawBodyParts() {
 
             if (Math.abs(rightEye.y - defaultRightEyePosition[0]) < BAD_DELTA_EYES && Math.abs(rightEye.y - leftEye.y) < BAD_DELTA_EYES &&
                 Math.abs(rightShoulder.y - leftShoulder.y) < BAD_DELTA_SHOULDERS) {
+                if(timerAlarm!=null) {clearTimeout(timerAlarm); console.log('alarm paused');}
+                timerAlarm=null;
+                alarm.pause();
                 document.getElementById("state").style.color="black";
                 document.getElementById("state").style.fontWeight="";
                 document.getElementById("state").innerHTML = goodState;
             } 
             else {
+                if(timerAlarm==null) timerAlarm=setTimeout(startAlarm, 3000);
                 document.getElementById("state").style.color="red";
                 document.getElementById("state").style.fontWeight="bold";
                 document.getElementById("state").innerHTML = badState;
